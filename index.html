@@ -32,7 +32,8 @@
         .video-overlay video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Show full video without cropping */
+            background-color: #000; /* Ensures black borders fill empty space */
         }
 
         .header {
@@ -201,7 +202,7 @@
 <body>
     <!-- Video Intro --> 
     <div class="video-overlay" id="videoOverlay">
-        <video autoplay muted onended="hideVideoOverlay()">
+        <video autoplay   onended="hideVideoOverlay()">
             <source src="./video2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -227,7 +228,7 @@
         <p>A National Level Project Competition</p>
         <div class="tagline">"Unravel the Mystery! Conquer Two Mind-Bending Challenges!"</div>
         <div class="register-btn-container">
-            <a href="https://forms.gle/your-google-form-link" target="_blank" class="register-btn">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfsUjt4u5CsAM7lhRpV0HBDUsLA_fwOgErKe8cy93FkobGU2w/viewform" target="_blank" class="register-btn">
                 Register Now
             </a>
         </div>
@@ -303,7 +304,7 @@
         <div class="card bg-dark text-light border-warning shadow-lg p-4">
             <div class="card-body text-center">
                 <p class="mb-3">For detailed information, refer to the Rule Book:</p>
-                <a href="rulebook.pdf" target="_blank" class="btn btn-warning btn-lg  website-btn" style="transition: transform 0.3s, background-color 0.3s;" 
+                <a href="https://drive.google.com/file/d/1Mrb_qXN1-VsMh4tJbfBfJi7wDqYqej5u/view?usp=sharing" target="_blank" class="btn btn-warning btn-lg  website-btn" style="transition: transform 0.3s, background-color 0.3s;" 
                    onmouseover="this.style.transform='scale(1.1)'; this.style.backgroundColor='#ffcc00';" 
                    onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffc107';">
                    View Rule Book
@@ -373,14 +374,16 @@
         function hideVideoOverlay() {
             document.getElementById('videoOverlay').style.display = 'none';
 
-             // Scroll to the header smoothly after video ends
-            document.querySelector('.header').scrollIntoView({ behavior: 'smooth' });   
-            setTimeout(() => {
+             // Add click listener to start audio
+            document.addEventListener('click', function playAudio() {
                 const audio = new Audio('audio.mp3');
-                audio.loop = true;
-                audio.play();
-            }, 2000); 
-        }
+                audio.loop = false;
+                audio.play().catch(error => console.warn('Audio playback prevented:', error));
+
+                // Remove the click listener after the audio starts
+                document.removeEventListener('click', playAudio);
+            }, { once: true }); // Ensures the listener runs only once
+            }
     </script>
 </body>
 </html>
